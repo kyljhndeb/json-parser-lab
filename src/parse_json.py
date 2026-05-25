@@ -73,17 +73,41 @@ def display_students(data):
             )
 
 
+def display_summary(data):
+    """
+    Displays summary report.
+    """
+    students = data["students"]
+    total_students = len(students)
+    total_courses = sum(len(s["courses"]) for s in students)
+    total_units = sum(
+        sum(c["units"] for c in s["courses"]) for s in students
+    )
+    avg_units = total_units / total_students if total_students > 0 else 0
+    bsit_students = [
+        s for s in students if s["program"] == "BS Information Technology"
+    ]
+
+    print("\nSUMMARY REPORT")
+    print(f"Total Students: {total_students}")
+    print(f"Total Courses Enrolled: {total_courses}")
+    print(f"Average Units Per Student: {avg_units:.2f}")
+    print("\nBS Information Technology Students:")
+    for s in bsit_students:
+        print(f"  - {s['first_name']} {s['last_name']}")
+
+
 def main():
     """
     Main program function.
     """
     json_file_path = Path("data/students.json")
-
     data = load_json_file(json_file_path)
 
     if data is not None:
         display_school_info(data)
         display_students(data)
+        display_summary(data)
 
 
 if __name__ == "__main__":
